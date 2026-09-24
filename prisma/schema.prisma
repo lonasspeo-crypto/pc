@@ -3,49 +3,53 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url = "file:./dev.db"
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model Category {
-  id Int @id @default(autoincrement())
-  name String @unique
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
   products Product[]
 }
 
 model Brand {
-  id Int @id @default(autoincrement())
-  name String @unique
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
   products Product[]
 }
 
 model Product {
-  id Int @id @default(autoincrement())
-  name String
-  slug String @unique
-  description String
-  price Int
-  stock Int
-  status String @default("ACTIVE")
-  imageUrl String
-  specs Json // buat simpan {"CPU": "...", "RAM": "..."}
+  id         Int        @id @default(autoincrement())
+  name       String
+  slug       String     @unique
+  description String    @db.Text // MySQL: pakai TEXT supaya tidak kepotong VARCHAR(191)
+  price      Int
+  stock      Int
+  status     String     @default("ACTIVE")
+  imageUrl   String
+  specs      Json // buat simpan {"CPU": "...", "RAM": "..."}
   categoryId Int
-  brandId Int?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-  category Category @relation(fields: [categoryId], references: [id])
-  brand Brand? @relation(fields: [brandId], references: [id])
-  inventory Inventory?
+  brandId    Int?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @default(now()) @updatedAt
+  category   Category   @relation(fields: [categoryId], references: [id])
+  brand      Brand?     @relation(fields: [brandId], references: [id])
+  inventory  Inventory?
   orderItems OrderItem[]
+
+  @@index([categoryId])
+  @@index([brandId])
+  @@index([status])
 }
 
 model Inventory {
-  id Int @id @default(autoincrement())
-  productId Int @unique
-  quantity Int @default(0)
-  reserved Int @default(0)
+  id        Int      @id @default(autoincrement())
+  productId Int      @unique
+  quantity  Int      @default(0)
+  reserved  Int      @default(0)
   updatedAt DateTime @default(now()) @updatedAt
-  product Product @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model Order {
@@ -54,7 +58,7 @@ model Order {
   customerName   String
   email          String
   phone          String
-  address        String
+  address        String      @db.Text
   city           String
   postalCode     String
   shippingMethod String
@@ -65,6 +69,9 @@ model Order {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @default(now()) @updatedAt
   items          OrderItem[]
+
+  @@index([email])
+  @@index([status])
 }
 
 model OrderItem {
@@ -76,4 +83,7 @@ model OrderItem {
   unitPrice Int
   order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product   Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
 }
