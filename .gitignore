@@ -1,8 +1,5 @@
-# Next.js build artifacts
-.next/
-
-# Dependency directory
+# Dependencies
 node_modules/
 
-# TypeScript build info
-tsconfig.tsbuildinfo
+# Logs
+*.log
