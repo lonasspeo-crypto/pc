@@ -86,6 +86,9 @@ const additionalProducts = [
   { name: 'Essential USB Mouse', slug: 'essential-usb-mouse', description: 'Mouse sederhana untuk komputer harian', price: 150000, stock: 25, category: 'Mouse', specs: { Sensor: '1600 DPI', Connection: 'USB', Weight: '95g' } },
 ]
 
+//imageUrl placeholder per kategori (file SVG di /public/products)
+const categoryImage = (category: string) => `/products/${category.toLowerCase().replace(/\s+/g, '-')}.svg`
+
 async function main() {
   const categories = new Map<string, number>()
   for (const name of ['VGA', 'Processor', 'RAM', 'Storage', 'Motherboard', 'Power', 'CPU Cooler', 'Case', 'Fan', 'Monitor', 'Keyboard', 'Mouse']) {
@@ -93,12 +96,13 @@ async function main() {
     categories.set(name, category.id)
   }
 
-  await prisma.product.upsert({ where: { slug: 'rtx-4060-ti-16gb' }, update: { imageUrl: '' }, create: { name: 'RTX 4060 Ti 16GB', slug: 'rtx-4060-ti-16gb', description: 'Performa 1440p gaming terbaik di kelasnya', price: 7500000, stock: 15, imageUrl: '', specs: { GPU: 'RTX 4060 Ti', VRAM: '16GB GDDR6', TDP: '165W' }, categoryId: categories.get('VGA')! } })
-  await prisma.product.upsert({ where: { slug: 'i5-14600k' }, update: { imageUrl: '' }, create: { name: 'Intel Core i5-14600K', slug: 'i5-14600k', description: '14 Core untuk gaming dan editing', price: 5200000, stock: 20, imageUrl: '', specs: { Cores: '14C/20T', Base: '3.5GHz', Socket: 'LGA1700' }, categoryId: categories.get('Processor')! } })
+  await prisma.product.upsert({ where: { slug: 'rtx-4060-ti-16gb' }, update: { imageUrl: categoryImage('VGA') }, create: { name: 'RTX 4060 Ti 16GB', slug: 'rtx-4060-ti-16gb', description: 'Performa 1440p gaming terbaik di kelasnya', price: 7500000, stock: 15, imageUrl: categoryImage('VGA'), specs: { GPU: 'RTX 4060 Ti', VRAM: '16GB GDDR6', TDP: '165W' }, categoryId: categories.get('VGA')! } })
+  await prisma.product.upsert({ where: { slug: 'i5-14600k' }, update: { imageUrl: categoryImage('Processor') }, create: { name: 'Intel Core i5-14600K', slug: 'i5-14600k', description: '14 Core untuk gaming dan editing', price: 5200000, stock: 20, imageUrl: categoryImage('Processor'), specs: { Cores: '14C/20T', Base: '3.5GHz', Socket: 'LGA1700' }, categoryId: categories.get('Processor')! } })
 
   for (const product of [...productTemplates, ...additionalProducts]) {
     const { category, ...productData } = product
-    await prisma.product.upsert({ where: { slug: product.slug }, update: { ...productData, imageUrl: '', categoryId: categories.get(category)! }, create: { ...productData, imageUrl: '', categoryId: categories.get(category)! } })
+    const imageUrl = categoryImage(category)
+    await prisma.product.upsert({ where: { slug: product.slug }, update: { ...productData, imageUrl, categoryId: categories.get(category)! }, create: { ...productData, imageUrl, categoryId: categories.get(category)! } })
   }
 }
 
