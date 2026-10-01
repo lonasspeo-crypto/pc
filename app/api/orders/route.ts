@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { findPaymentMethod } from '@/lib/payment-methods'
 
 type OrderRequestItem = { productId: number; quantity: number }
 
@@ -11,6 +12,7 @@ type OrderRequest = {
   city: string
   postalCode: string
   shippingMethod: 'regular' | 'express'
+  paymentMethod: string
   items: OrderRequestItem[]
 }
 
@@ -34,6 +36,11 @@ export async function POST(request: Request) {
 
   if (!body.items?.length || !['regular', 'express'].includes(body.shippingMethod)) {
     return NextResponse.json({ error: 'Keranjang atau metode pengiriman tidak valid.' }, { status: 400 })
+  }
+
+  const paymentMethod = typeof body.paymentMethod === 'string' ? findPaymentMethod(body.paymentMethod.trim().toLowerCase()) : undefined
+  if (!paymentMethod) {
+    return NextResponse.json({ error: 'Metode pembayaran tidak dikenali.' }, { status: 400 })
   }
 
   const requestedItems = body.items.map((item) => ({
@@ -80,13 +87,14 @@ export async function POST(request: Request) {
           shippingFee,
           subtotal,
           total: subtotal + shippingFee,
+          paymentMethod: paymentMethod.code,
           items: { create: orderItems },
         },
         include: { items: true },
       })
     })
 
-    return NextResponse.json({ order: { id: order.id, orderNumber: order.orderNumber, total: order.total, status: order.status } }, { status: 201 })
+    return NextResponse.json({ order: { id: order.id, orderNumber: order.orderNumber, total: order.total, status: order.status, paymentMethod: order.paymentMethod } }, { status: 201 })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Order tidak dapat dibuat.'
     return NextResponse.json({ error: message }, { status: 400 })
