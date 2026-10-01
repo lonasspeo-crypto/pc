@@ -80,11 +80,69 @@ function CheckoutPage() {
                         columnNumber: 101
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                        children: "Isi data pengiriman dengan lengkap. Harga dan stok akan kami cek kembali saat pesanan dibuat."
+                        children: "Tiga langkah mudah: isi data → pilih kirim & bayar → transaksi selesai. Harga dan stok dicek ulang saat pesanan dibuat."
                     }, void 0, false, {
                         fileName: "[project]/app/checkout/page.tsx",
                         lineNumber: 9,
                         columnNumber: 145
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("ol", {
+                        className: "checkout-guide",
+                        "aria-label": "Panduan singkat",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                        children: "1"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/checkout/page.tsx",
+                                        lineNumber: 9,
+                                        columnNumber: 335
+                                    }, this),
+                                    " Isi nama, kontak, dan alamat pengirimannya."
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/checkout/page.tsx",
+                                lineNumber: 9,
+                                columnNumber: 331
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                        children: "2"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/checkout/page.tsx",
+                                        lineNumber: 9,
+                                        columnNumber: 396
+                                    }, this),
+                                    " Pilih ongkir dan metode bayar (e-wallet / bank / VA)."
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/checkout/page.tsx",
+                                lineNumber: 9,
+                                columnNumber: 392
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("b", {
+                                        children: "3"
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/checkout/page.tsx",
+                                        lineNumber: 9,
+                                        columnNumber: 467
+                                    }, this),
+                                    " Tekan “Saya sudah bayar” — pesanan langsung terkonfirmasi."
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/app/checkout/page.tsx",
+                                lineNumber: 9,
+                                columnNumber: 463
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/app/checkout/page.tsx",
+                        lineNumber: 9,
+                        columnNumber: 271
                     }, this)
                 ]
             }, void 0, true, {
