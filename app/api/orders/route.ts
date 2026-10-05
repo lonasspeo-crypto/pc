@@ -1,5 +1,7 @@
+import { randomBytes } from 'node:crypto'
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getCurrentUser } from '@/lib/dal'
 import { findPaymentMethod } from '@/lib/payment-methods'
 
 type OrderRequestItem = { productId: number; quantity: number }
@@ -55,6 +57,9 @@ export async function POST(request: Request) {
   for (const item of requestedItems) itemMap.set(item.productId, (itemMap.get(item.productId) ?? 0) + item.quantity)
   const productIds = [...itemMap.keys()]
 
+  // Pembeli yang sedang login: pesanan otomatis tertaut ke akunnya (tamu tetap boleh checkout).
+  const currentUser = await getCurrentUser()
+
   try {
     const order = await prisma.$transaction(async (transaction) => {
       const products = await transaction.product.findMany({ where: { id: { in: productIds }, status: 'ACTIVE' } })
@@ -67,7 +72,9 @@ export async function POST(request: Request) {
       })
       const subtotal = orderItems.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0)
       const shippingFee = shippingFees[body.shippingMethod]
-      const orderNumber = `GK-${Date.now()}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`
+      // Bagian acak memakai crypto supaya nomor pesanan tidak bisa ditebak (nomor ini juga
+      // dipakai pesanan tamu sebagai "kunci" untuk membayar/membatalkan di /api/orders/pay).
+      const orderNumber = `GK-${Date.now()}-${randomBytes(5).toString('hex').toUpperCase()}`
 
       for (const item of orderItems) {
         const updated = await transaction.product.updateMany({ where: { id: item.productId, stock: { gte: item.quantity }, status: 'ACTIVE' }, data: { stock: { decrement: item.quantity } } })
@@ -77,6 +84,7 @@ export async function POST(request: Request) {
       return transaction.order.create({
         data: {
           orderNumber,
+          userId: currentUser?.id ?? null,
           customerName: body.customerName.trim(),
           email: body.email.trim().toLowerCase(),
           phone: body.phone.trim(),

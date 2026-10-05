@@ -4,7 +4,7 @@ import BuildConfigurator from '@/components/BuildConfigurator'
 import BrandMark from '@/components/BrandMark'
 
 export default async function BuilderPage() {
-  const products = await prisma.product.findMany({ include: { category: true }, orderBy: { categoryId: 'asc' } })
+  const products = await prisma.product.findMany({ where: { status: 'ACTIVE' }, include: { category: true }, orderBy: { categoryId: 'asc' } })
   const categories = [...new Set(products.map((product) => product.category.name))]
 
   return (

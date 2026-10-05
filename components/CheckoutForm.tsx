@@ -25,7 +25,9 @@ const stepTitles = ['Data & Alamat', 'Kirim & Bayar', 'Konfirmasi']
 
 const formatPrice = (value: number) => `Rp ${value.toLocaleString('id-ID')}`
 
-export default function CheckoutForm() {
+type CheckoutDefaults = { customerName?: string; email?: string; phone?: string; address?: string; city?: string; postalCode?: string }
+
+export default function CheckoutForm({ defaults }: { defaults?: CheckoutDefaults } = {}) {
   const [items, setItems] = useState<CartItem[]>([])
   const [step, setStep] = useState(0)
   const [shippingMethod, setShippingMethod] = useState<ShippingMethod>('regular')
@@ -35,7 +37,7 @@ export default function CheckoutForm() {
   const [error, setError] = useState('')
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [order, setOrder] = useState<PlacedOrder | null>(null)
-  const [form, setForm] = useState({ customerName: '', email: '', phone: '', address: '', city: '', postalCode: '' })
+  const [form, setForm] = useState({ customerName: defaults?.customerName ?? '', email: defaults?.email ?? '', phone: defaults?.phone ?? '', address: defaults?.address ?? '', city: defaults?.city ?? '', postalCode: defaults?.postalCode ?? '' })
   const fieldsRef = useRef<HTMLDivElement>(null)
   const payRef = useRef<HTMLDivElement>(null)
 

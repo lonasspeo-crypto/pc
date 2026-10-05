@@ -13,7 +13,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params
   const product = await prisma.product.findUnique({ where: { slug }, include: { category: true } })
 
-  if (!product) notFound()
+  if (!product || product.status !== 'ACTIVE') notFound()
 
   const specs = product.specs as Record<string, string>
 
