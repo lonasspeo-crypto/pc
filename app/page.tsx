@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { Suspense } from 'react'
+import AccountLink from '@/components/AccountLink'
 import Hero3D from '@/components/Hero3D'
 import Reveal from '@/components/Reveal'
 import CartTrigger from '@/components/CartTrigger'
@@ -10,12 +12,12 @@ import ManufacturerBrands from '@/components/ManufacturerBrands'
 import MobileMenu from '@/components/MobileMenu'
 
 export default async function Home() {
-  const highlightedProducts = await prisma.product.findMany({ include: { category: true }, orderBy: { stock: 'desc' }, take: 6 })
+  const highlightedProducts = await prisma.product.findMany({ where: { status: 'ACTIVE' }, include: { category: true }, orderBy: { stock: 'desc' }, take: 6 })
 
   return (
     <main>
       <section className="hero-shell">
-        <nav className="site-nav page-width"><BrandMark /><div className="nav-links"><Link href="#highlights">Terlaris</Link><Link href="#collections">Koleksi</Link><Link href="#builder">Rakit PC</Link><Link href="/products">Semua produk</Link></div><div className="mobile-nav-actions"><MobileMenu /><CartTrigger /></div><div className="desktop-cart"><CartTrigger /></div></nav>
+        <nav className="site-nav page-width"><BrandMark /><div className="nav-links"><Link href="#highlights">Terlaris</Link><Link href="#collections">Koleksi</Link><Link href="#builder">Rakit PC</Link><Link href="/products">Semua produk</Link></div><div className="mobile-nav-actions"><Suspense><AccountLink /></Suspense><MobileMenu /><CartTrigger /></div><div className="desktop-cart"><Suspense><AccountLink /></Suspense><CartTrigger /></div></nav>
         <div className="hero-content page-width"><div className="hero-copy"><p className="eyebrow hero-eyebrow">Gila Komputer / teman upgrade-mu</p><h1>Komputer <em>tanpa kompromi.</em></h1><p className="hero-description">Komponen yang tepat, performa yang terasa, dan rakitan yang dibuat untuk menemani ide-ide besarmu bekerja lebih jauh.</p><div className="hero-actions"><Link href="/products" className="button button-dark">Temukan komponen <span>↗</span></Link><Link href="#builder" className="text-link">Rakit PC sekarang <span>↓</span></Link></div></div><Hero3D /></div>
         <div className="hero-index page-width"><span></span><span className="index-line" /><span>Scroll kebawah kakak!</span></div>
       </section>

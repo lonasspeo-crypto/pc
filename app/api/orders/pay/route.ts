@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getCurrentUser } from '@/lib/dal'
 import { findPaymentMethod } from '@/lib/payment-methods'
 
 // ============================================================================
@@ -22,6 +23,17 @@ export async function POST(request: Request) {
   const orderNumber = typeof body.orderNumber === 'string' ? body.orderNumber.trim() : ''
   const action = body.action === 'cancel' ? 'cancel' : 'pay' // default: bayar
   if (!orderNumber) return NextResponse.json({ error: 'Nomor pesanan wajib diisi.' }, { status: 400 })
+
+  // Otorisasi: pesanan milik akun hanya bisa diproses pemiliknya (atau admin).
+  // Pesanan tamu (userId kosong) dilindungi nomor pesanannya yang acak.
+  const target = await prisma.order.findUnique({ where: { orderNumber }, select: { userId: true } })
+  if (!target) return NextResponse.json({ error: 'Pesanan tidak ditemukan.' }, { status: 404 })
+  if (target.userId !== null) {
+    const user = await getCurrentUser()
+    if (!user || (user.id !== target.userId && user.role !== 'ADMIN')) {
+      return NextResponse.json({ error: 'Kamu tidak punya akses ke pesanan ini. Silakan masuk dengan akun yang benar.' }, { status: 403 })
+    }
+  }
 
   try {
     const result = await prisma.$transaction(async (transaction) => {

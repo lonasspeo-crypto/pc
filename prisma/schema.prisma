@@ -7,6 +7,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  passwordHash String   // hash bcrypt, TIDAK PERNAH menyimpan password asli
+  role         String   @default("USER") // USER | ADMIN
+  phone        String?
+  address      String?  @db.Text
+  city         String?
+  postalCode   String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
+  orders       Order[]
+
+  @@index([role])
+}
+
 model Category {
   id       Int       @id @default(autoincrement())
   name     String    @unique
@@ -55,6 +72,7 @@ model Inventory {
 model Order {
   id             Int         @id @default(autoincrement())
   orderNumber    String      @unique
+  userId         Int?        // null = pesanan tamu (checkout tanpa login)
   customerName   String
   email          String
   phone          String
@@ -72,9 +90,11 @@ model Order {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @default(now()) @updatedAt
   items          OrderItem[]
+  user           User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([email])
   @@index([status])
+  @@index([userId])
 }
 
 model OrderItem {
